@@ -12,6 +12,8 @@ function App() {
   const [modoEdicion, setModoEdicion] = useState(false)
   // creo un estado para guardar el id que voy a editar
   const [id, setId] = useState('')
+  // creo un estado para poder manipular el error de mis campo vacio
+  const [error, setError] = useState(null)
 
 
 
@@ -23,7 +25,9 @@ function App() {
 
     // valido que tenga algun texto
     if (!tarea.trim()) {
-      console.log('Campo vacio')
+      // console.log('Campo vacio')
+      // Creo un error para poder agregarlo al formulario
+      setError('Escriba algo por favor...')
       // para que se salga
       return
     }
@@ -42,6 +46,8 @@ function App() {
 
     // limpia el input
     setTarea('')
+    // limpio el mensaje de error
+    setError(null)
   }
 
   // Funcion para eliminar tareas
@@ -79,7 +85,9 @@ function App() {
 
     // valido que tenga algun texto
     if (!tarea.trim()) {
-      console.log('Campo vacio')
+      // console.log('Campo vacio')
+      // Creo un error para poder agregarlo al formulario
+      setError('Escriba algo por favor...')
       // para que se salga
       return
     }
@@ -102,6 +110,8 @@ function App() {
     setTarea('')
     // limpio el id
     setId('')
+    // limpio el mensaje de error
+    setError(null)
   }
 
 
@@ -124,26 +134,35 @@ function App() {
           <ul className="list-group">
             {/* voy a recorrer mi array de tareas para poder pintarlo */}
             {
-              tareas.map((item, index) => (
-                <li
-                  className="list-group-item"
-                  // coloco el key de mi tarea
-                  key={item.id}
-                >
-                  <span className="lead"><b>ID:</b> {item.id}<br /></span>
-                  <span className="lead"><b>DESCRIPCION DE LA TAREA:</b> {item.nombreTarea}<br /></span>
-                  <button
-                    className="btn btn-danger btn-sm float-right mx-2"
-                    // creo mi evento
-                    onClick={() => eliminarTarea(item.id)}
-                  >ELIMINAR</button>
-                  <button
-                    className="btn btn-warning btn-sm float-right"
-                    // creo mi evento
-                    onClick={() => editar(item)}
-                  >EDITAR</button>
-                </li>
-              ))
+
+              // HAGO UN VALIDACION PARA VER EL MENSAJE DE ERROR
+              // CUANDO no hay tareas en el array
+              tareas.length === 0 ? (
+                <li className="list-group-item">No hay tareas</li>
+              ) : (
+                // cuando haya tareas devolvemos todas las tareas
+                tareas.map((item, index) => (
+                  <li
+                    className="list-group-item"
+                    // coloco el key de mi tarea
+                    key={item.id}
+                  >
+                    <span className="lead"><b>ID:</b> {item.id}<br /></span>
+                    <span className="lead"><b>DESCRIPCION DE LA TAREA:</b> {item.nombreTarea}<br /></span>
+                    <button
+                      className="btn btn-danger btn-sm float-right mx-2"
+                      // creo mi evento
+                      onClick={() => eliminarTarea(item.id)}
+                    >ELIMINAR</button>
+                    <button
+                      className="btn btn-warning btn-sm float-right"
+                      // creo mi evento
+                      onClick={() => editar(item)}
+                    >EDITAR</button>
+                  </li>
+                ))
+              )
+
             }
           </ul>
         </div>
@@ -158,6 +177,15 @@ function App() {
           </h4>
           {/* Hago el formulario */}
           <form onSubmit={modoEdicion ? editarTarea : agregarTarea}>
+
+            {/* creo un mensaje de error si mi campo esta vacio */}
+            {
+              // cuando el error se presente osea no tenga nada el campo pinte un mensaje, en caso contrario no pinte nada
+              error ? (<span className="text-danger">{error}</span>) : (null)
+            }
+
+
+
             {/* input.form-control.mb-2 */}
             <input
               // el tipo
