@@ -36,6 +36,27 @@ function App() {
     setTarea('')
   }
 
+  // Funcion para eliminar tareas
+  const eliminarTarea = (id) => {
+    // console.log(`Tarea eliminada ${id}`)
+
+    // recorro las tareas y excluyo el item distinto que tome para eliminar
+    // filtro todo el id distinto
+    const arrayFiltrado = tareas.filter(item => item.id !== id)
+
+    // guardo el nuevo array filtrado
+    setTareas(arrayFiltrado)
+  }
+
+
+  // Funcion para editar tareas
+  const editarTarea = (id) => {
+    // console.log(`Tarea editada ${id}`)
+  }
+
+
+
+
   return (
     <div className="container mt-5">
       <h1 className="text-center">CRUD SIMPLE</h1>
@@ -60,8 +81,16 @@ function App() {
                 >
                   <span className="lead"><b>ID:</b> {item.id}<br /></span>
                   <span className="lead"><b>DESCRIPCION DE LA TAREA:</b> {item.nombreTarea}<br /></span>
-                  <button className="btn btn-danger btn-sm float-right mx-2">ELIMINAR</button>
-                  <button className="btn btn-warning btn-sm float-right">EDITAR</button>
+                  <button
+                    className="btn btn-danger btn-sm float-right mx-2"
+                    // creo mi evento
+                    onClick={() => eliminarTarea(item.id)}
+                  >ELIMINAR</button>
+                  <button
+                    className="btn btn-warning btn-sm float-right"
+                    // creo mi evento
+                    onClick={() => editarTarea(item.id)}
+                  >EDITAR</button>
                 </li>
               ))
             }
