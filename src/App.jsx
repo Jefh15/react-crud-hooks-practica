@@ -4,8 +4,16 @@ import { useState } from "react";
 
 function App() {
 
+  // creo un estado para cada tarea individual
   const [tarea, setTarea] = useState('')
+  // creo un estado para guardar todas tareas
   const [tareas, setTareas] = useState([])
+  // creo un estado para poder editar la tarea y usar el formulario y poder cambiar sus propiedades
+  const [modoEdicion, setModoEdicion] = useState(false)
+  // creo un estado para guardar el id que voy a editar
+  const [id, setId] = useState('')
+
+
 
 
   // funcion de flecha, recibo un evento
@@ -19,7 +27,7 @@ function App() {
       // para que se salga
       return
     }
-    console.log(tarea)
+    // console.log(tarea)
 
     // agregamos todas las tarea
     setTareas(
@@ -50,9 +58,52 @@ function App() {
 
 
   // Funcion para editar tareas
-  const editarTarea = (id) => {
-    // console.log(`Tarea editada ${id}`)
+  const editar = (item) => {
+    // console.log(`Tarea editada ${item}`)
+
+    // cambio a modo edicion
+    setModoEdicion(true)
+
+    // edito la propiedad del objeto o del item
+    setTarea(item.nombreTarea)
+    // guardo el id del item(de la tarea) que voy a editar en el estado
+    setId(item.id)
   }
+
+
+  // funcion de flecha, recibo un evento
+  const editarTarea = (e) => {
+    // evita que se procese el formulario
+    // osea no haga la operacion del get
+    e.preventDefault()
+
+    // valido que tenga algun texto
+    if (!tarea.trim()) {
+      console.log('Campo vacio')
+      // para que se salga
+      return
+    }
+    // console.log(tarea)
+
+    // tomamos el array de tareas y 
+    // le pregunto si el item que tome tiene el mismo id ---> retorno el id y su tarea, 
+    // pero si no es igual a la tarea --> retorno el item nada mas
+    const arrayEditado = tareas.map(
+      // si el id es igual en el caso de que el usuario edito algo, devolvemos el objeto osea la tarea
+      // si no es igual devolvemos el item osea el rsto de las tareas
+      (item) => item.id === id ? { id: id, nombreTarea: tarea } : item
+    )
+
+    // guardo el item
+    setTareas(arrayEditado)
+    // paso de modo edicion a false
+    setModoEdicion(false)
+    // limpia el input
+    setTarea('')
+    // limpio el id
+    setId('')
+  }
+
 
 
 
@@ -89,7 +140,7 @@ function App() {
                   <button
                     className="btn btn-warning btn-sm float-right"
                     // creo mi evento
-                    onClick={() => editarTarea(item.id)}
+                    onClick={() => editar(item)}
                   >EDITAR</button>
                 </li>
               ))
@@ -99,10 +150,14 @@ function App() {
         {/* columna de 4 espacios */}
         <div className="col-4">
           <h4 className="text-center">
-            FORMULARIO
+            {/* para poder editar el titulo de mi propiedad */}
+            {
+              // Operador ternario para poder cambiar mi formulario
+              modoEdicion ? "EDITAR TAREA" : "AGREGAR TAREA"
+            }
           </h4>
           {/* Hago el formulario */}
-          <form onSubmit={agregarTarea}>
+          <form onSubmit={modoEdicion ? editarTarea : agregarTarea}>
             {/* input.form-control.mb-2 */}
             <input
               // el tipo
@@ -117,16 +172,30 @@ function App() {
               // pasamos el estado para que se pueda limpiar
               value={tarea}
             />
-            {/* button.btn.btn-dark.btn-block */}
-            <button
-              className="btn btn-dark btn-block"
-              // para que funcione con la tecla enter
-              type="submit">Agregar</button>
+
+            {/* hago la validacion para que mi valor que tiene mi boton sea distinto si edito o creo una tarea */}
+            {
+              // si estoy en modo edicion
+              modoEdicion ? (
+                // button.btn.btn-dark.btn-block
+                < button
+                  className="btn btn-warning btn-block"
+                  // para que funcione con la tecla enter
+                  type="submit"
+                >Editar</button>
+              ) : (
+                // button.btn.btn-dark.btn-block
+                < button
+                  className="btn btn-dark btn-block"
+                  // para que funcione con la tecla enter
+                  type="submit">Agregar</button>
+              )
+            }
 
           </form>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
