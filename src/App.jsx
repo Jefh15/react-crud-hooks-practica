@@ -50,11 +50,21 @@ function App() {
           </h4>
           {/* UNA LISTA */}
           <ul className="list-group">
-            <li className="list-group-item">
-              <span className="lead">Nombre de la tarea</span>
-              <button className="btn btn-danger btn-sm float-right mx-2">Eliminar</button>
-              <button className="btn btn-warning btn-sm float-right">Editar</button>
-            </li>
+            {/* voy a recorrer mi array de tareas para poder pintarlo */}
+            {
+              tareas.map((item, index) => (
+                <li
+                  className="list-group-item"
+                  // coloco el key de mi tarea
+                  key={item.id}
+                >
+                  <span className="lead"><b>ID:</b> {item.id}<br /></span>
+                  <span className="lead"><b>DESCRIPCION DE LA TAREA:</b> {item.nombreTarea}<br /></span>
+                  <button className="btn btn-danger btn-sm float-right mx-2">ELIMINAR</button>
+                  <button className="btn btn-warning btn-sm float-right">EDITAR</button>
+                </li>
+              ))
+            }
           </ul>
         </div>
         {/* columna de 4 espacios */}
